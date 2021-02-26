@@ -1,4 +1,5 @@
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, ReactNode, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import Challenges from '../../challenges.json'
 
 
@@ -24,16 +25,27 @@ interface ChallengesProviderProps {
 }
 
 
+
 export const ChallengesContexts = createContext({} as ChallengesContextData);
 
 export function ChallengesProvider({ children }: ChallengesProviderProps) {
     const [level, setLevel] = useState(1);
     const [currentExperience, setCurrentExperience] = useState(0);
-    const [challengesCompleted, setChallengesCompletes] = useState(2);
+    const [challengesCompleted, setChallengesCompletes] = useState(0);
 
     const [activeChallenge, setActiveChallenge] = useState(null)
 
     const experienceToNextLevel = Math.pow((level + 1) * 4, 2)
+
+    useEffect( () => {
+        Notification.requestPermission()
+    }, [] )
+
+    useEffect(() => { 
+        Cookies.set('level', String(level))
+        Cookies.set('currentExperience', String(currentExperience))
+        Cookies.set('challengesCompleted', String(challengesCompleted))
+     }, [level, currentExperience, challengesCompleted])
 
     function LevelUp() {
         setLevel(level + 1)
@@ -44,6 +56,14 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
         const Challenge = Challenges[randomChallengeIndex]
 
         setActiveChallenge(Challenge)
+
+        new Audio('/notification.mp3').play();
+
+        if(Notification.permission === "granted"){
+            new Notification('Novo desafio 🎉🎉', {
+                body: `Valendo ${Challenge.amount}xp!`
+            })
+        }
     }
 
     function resetChallenge() {
@@ -60,7 +80,14 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
 
         let finalExperience = currentExperience + amount;
 
-        if(finalExperience >= experienceToNextLevel)
+        if(finalExperience >= experienceToNextLevel){
+            finalExperience= finalExperience - experienceToNextLevel;
+            LevelUp();
+        }
+
+        setCurrentExperience(finalExperience);
+        setActiveChallenge(null)
+        setChallengesCompletes(challengesCompleted + 1)
     }
    
    
