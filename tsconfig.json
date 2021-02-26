@@ -20,9 +20,8 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/contexts/ChallengesContexts.tsx"  ],
   "exclude": [
     "node_modules"
   ]

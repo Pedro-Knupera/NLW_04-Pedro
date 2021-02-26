@@ -1,41 +1,55 @@
+import { useContext } from 'react';
+
+import {ChallengesContexts} from '../contexts/ChallengeContext'
+
 import styles from '../styles/components/ChallengesBox.module.css';
 
 
 
 
-export function ChallengesBox(){
-    const hasActivateChallenger = true;
-    return(
+export function ChallengesBox() {
+    const {activeChallenge, resetChallenge} = useContext(ChallengesContexts)
+
+
+    return (
+
         <div className={styles.ChallengeBoxContainder}>
-            {hasActivateChallenger ? (
+
+            {activeChallenge ? (
+
                 <div className={styles.challengeActivate}>
-                    <header>Ganhe 400xp</header>
+
+                    <header>Ganhe {activeChallenge.amount}</header>
 
                     <main>
-                        <img src="icons\body.svg"/>
+                        <img src="icons\body.svg" />
                         <strong>Novo desafio</strong>
-                        <p>Descanse os olhos por alguns minutos!</p>
+                        <p>{activeChallenge.description}</p>
                     </main>
 
                     <footer>
-                         <button 
-                         type="button"
-                         className={styles.buttonFailChallenge}
-                         >Falhei</button>
-                         <button 
-                         type="button"
-                         className={styles.buttonSucessChallenge}
-                         >Completei</button>
+                        <button
+                            type="button"
+                            className={styles.failedButtonChallenge}
+                            onClick={resetChallenge}
+                        >Falhei</button>
+                        <button
+                            type="button"
+                            className={styles.succeededButtonChallenge}
+                        >Completei</button>
                     </footer>
                 </div>
+
             ) : (
-            <div className={styles.ChallengeNotActive}>
-                    <strong>Finalize a count to release a challenge</strong>
-                <p>
-                    <img src="icons/level-up.svg" alt=""/>
+
+                    <div className={styles.ChallengeNotActive}>
+                        <strong>Finalize a count to release a challenge</strong>
+
+                        <p>
+                            <img src="icons/level-up.svg" alt="" />
                     Avançe de Level Completando o desafio!
                 </p>
-            </div>)}
+                    </div>)}
         </div>
     )
 }
