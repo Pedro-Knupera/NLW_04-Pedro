@@ -3,6 +3,7 @@
 
 
     background:var(--white);
+    max-width: 380px;
     border-radius: 5px;
     box-shadow:0 0 68px rgba(0, 0, 0, 0.2);
     padding:1.5rem 2rem;
@@ -12,8 +13,6 @@
     align-items:center;
     flex-direction:column;
     justify-content:center;
-
-
     text-align:center;
 }
 
